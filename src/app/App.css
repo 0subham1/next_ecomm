@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap");
+
+body {
+  font-size: 18px;
+  font-family: "Ubuntu" !important;
+  overflow: auto;
+}
+
+* {
+  margin: 4px;
+}
+.header {
+  margin: 0px !important;
+  background: black;
+  color: white;
+  padding: 10px;
+  height: 60px;
+}
+
+.skyBtn .dropdown-toggle {
+  background-color: rgb(24, 32, 40) !important;
+}
+
+.q1 div {
+  padding: 5px;
+  height: 50px;
+}
+.row0 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.row2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.row3 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row4 {
+  display: flex;
+  justify-content: space-around;
+}
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 400px;
+  border: 2px solid;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.adminPanel {
+  width: 200px;
+  cursor: pointer;
+}
+
+.adminPanel div {
+  padding-left: 10px;
+}
+
+.icon {
+  font-size: 17px !important;
+  cursor: "pointer" !important;
+}
+
+.icon:hover {
+  color: aqua;
+  cursor: pointer;
+}
+
+.hover:hover {
+  color: rgb(231, 63, 63);
+  cursor: pointer;
+}
+
+.mobileView {
+  display: none !important;
+}
+
+.deskView {
+  display: block !important;
+}
+
+@media (max-width: 40em) {
+  .mobileView {
+    display: flex !important;
+  }
+
+  .deskView {
+    display: none !important;
+  }
+  #cartBox {
+    height: 30vh !important;
+    overflow-y: "auto" !important;
+  }
+}
+
+@media (max-width: 60rem) {
+  #cart {
+    display: none;
+  }
+  #responsiveCart {
+    display: block !important;
+  }
+
+  #cartDiv {
+    width: 100% !important;
+  }
+
+  #itemList {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 30rem) {
+  #toHide {
+    display: none !important;
+  }
+  .adminPanel {
+    min-width: 30px !important;
+  }
+  .adminPanel div {
+    padding-left: 5px !important;
+  }
+  .navKeys {
+    display: none !important;
+  }
+}
