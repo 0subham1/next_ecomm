@@ -144,3 +144,7 @@ body {
     display: none !important;
   }
 }
+
+@media (max-width:30rem){
+
+}

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@mui/material/Button";
+import Button from "@mui/material/Button"; 
 import { BASE_URL } from "./Const";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
@@ -19,6 +19,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import logo from "../../public/img/logo.png";
 import Image from "next/image";
 import Cookies from "universal-cookie";
+import Nav from "./Nav";
 
 
 const Header = ({ poke, poke2 }) => {
@@ -392,7 +393,11 @@ const Header = ({ poke, poke2 }) => {
             )}
           </div>
         </div>
+
+        
       </div>
+
+
       <Toaster />
     </>
   );
