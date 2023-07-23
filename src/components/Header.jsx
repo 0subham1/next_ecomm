@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@mui/material/Button"; 
+import Button from "@mui/material/Button";
 import { BASE_URL } from "./Const";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
@@ -21,13 +21,16 @@ import Image from "next/image";
 import Cookies from "universal-cookie";
 import Nav from "./Nav";
 
-
 const Header = ({ poke, poke2 }) => {
   let router = useRouter();
   const cookies = new Cookies();
-  var localUserInfo = cookies.get("localUserInfo");
+  var userInfo = cookies.get("userInfo");
   let cookieTime = new Date();
   cookieTime.setTime(cookieTime.getTime() + 9 * 60 * 60 * 1000);
+
+  useEffect(() => {
+    console.log(cookies, "coo");
+  }, [cookies?.userInfo]);
 
   const [style, setStyle] = useState("Sign In");
   const [loading, setLoading] = useState(false);
@@ -49,7 +52,7 @@ const Header = ({ poke, poke2 }) => {
     setShow3(false);
   };
 
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo1, setUserInfo1] = useState({
     name: "",
     phone: "",
     password: "",
@@ -58,7 +61,6 @@ const Header = ({ poke, poke2 }) => {
   useEffect(() => {
     poke2 && setShow(true);
   }, [poke]);
-  console.log(poke, poke2, "p poke2");
   const handleLogout = () => {
     Swal.fire({
       title: " Logout ?",
@@ -70,15 +72,16 @@ const Header = ({ poke, poke2 }) => {
       cancelButtonText: "No",
     }).then((result) => {
       if (result.isConfirmed) {
-        cookies.remove("localUserInfo");
+        cookies.remove("userInfo");
         cookies.remove("auth");
-        router.push("/")
+
+        router.push("/");
       }
     });
   };
   const handleData = (e) => {
-    setUserInfo({
-      ...userInfo,
+    setUserInfo1({
+      ...userInfo1,
       [e.target.name]: e.target.value,
     });
   };
@@ -86,8 +89,8 @@ const Header = ({ poke, poke2 }) => {
     setLoading(true);
     e.preventDefault();
     const data = {
-      name: userInfo.name.toLocaleLowerCase(),
-      password: userInfo.password,
+      name: userInfo1.name.toLocaleLowerCase(),
+      password: userInfo1.password,
     };
     if (!data.name || !data.password) {
       toast.error("Please fill both fields");
@@ -102,12 +105,13 @@ const Header = ({ poke, poke2 }) => {
             path: "/",
             expires: cookieTime,
           });
-          cookies.set("localUserInfo", JSON.stringify(res.data.result), {
+          cookies.set("userInfo", JSON.stringify(res.data.result), {
             path: "/",
             expires: cookieTime,
           });
           toast.success("login successful");
-         router.push("/")
+          //  router.push("/")
+          router.refresh();
           setLoading(false);
           handleClose();
         } else {
@@ -116,7 +120,7 @@ const Header = ({ poke, poke2 }) => {
         }
       });
     } else if (style == "Sign Up") {
-      axios.post(BASE_URL + "signUp", userInfo).then((res) => {
+      axios.post(BASE_URL + "signUp", userInfo1).then((res) => {
         console.log(res);
         if (res.data) {
           toast.success("SignUp successful");
@@ -129,13 +133,13 @@ const Header = ({ poke, poke2 }) => {
       });
     } else {
       axios
-        .put(BASE_URL + "editUser/" + localUserInfo._id, userInfo)
+        .put(BASE_URL + "editUser/" + userInfo._id, userInfo1)
         .then((res) => {
           console.log(res);
           if (res.data.matchedCount > 0) {
             toast.success("user Updated");
-            axios.get(BASE_URL + "user/" + localUserInfo._id).then((res) => {
-              cookies.set("localUserInfo", JSON.stringify(res.data), {
+            axios.get(BASE_URL + "user/" + userInfo._id).then((res) => {
+              cookies.set("userInfo", JSON.stringify(res.data), {
                 path: "/",
                 expires: cookieTime,
               });
@@ -163,17 +167,17 @@ const Header = ({ poke, poke2 }) => {
   const handleProfile = () => {
     setShow(true);
     setStyle("Edit Profile");
-    setUserInfo({
-      ...userInfo,
+    setUserInfo1({
+      ...userInfo1,
 
-      name: localUserInfo.name.toLocaleLowerCase(),
-      phone: localUserInfo.phone,
-      password: localUserInfo.password.toLocaleLowerCase(),
+      name: userInfo.name.toLocaleLowerCase(),
+      phone: userInfo.phone,
+      password: userInfo.password.toLocaleLowerCase(),
     });
   };
 
   const handleOrderHistory = () => {
-    axios.get(BASE_URL + "userOrders/" + localUserInfo._id).then((res) => {
+    axios.get(BASE_URL + "userOrders/" + userInfo._id).then((res) => {
       console.log(res);
       setShow3(true);
       setOrderList(res.data);
@@ -182,152 +186,154 @@ const Header = ({ poke, poke2 }) => {
 
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton={true}>{style}</Modal.Header>
+      <>
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton={true}>{style}</Modal.Header>
 
-        <Modal.Body>
-          <form onSubmit={handleSave}>
-            <div className="q1">
-              <div>
-                <TextField
-                  variant="outlined"
-                  fullWidth={true}
-                  label="Name"
-                  name="name"
-                  value={userInfo.name}
-                  onChange={(e) => handleData(e)}
-                />
+          <Modal.Body>
+            <form onSubmit={handleSave}>
+              <div className="q1">
+                <div>
+                  <TextField
+                    variant="outlined"
+                    fullWidth={true}
+                    label="Name"
+                    name="name"
+                    value={userInfo1.name}
+                    onChange={(e) => handleData(e)}
+                  />
+                </div>
+                {style == "Sign In" ? (
+                  <></>
+                ) : (
+                  <>
+                    <br />
+                    <div>
+                      <TextField
+                        variant="outlined"
+                        label="Phone"
+                        fullWidth={true}
+                        name="phone"
+                        value={userInfo1.phone}
+                        onChange={(e) => handleData(e)}
+                      />
+                    </div>
+                  </>
+                )}
+
+                <br />
+                <div>
+                  <TextField
+                    fullWidth={true}
+                    variant="outlined"
+                    label="Password"
+                    name="password"
+                    value={userInfo1.password}
+                    onChange={(e) => handleData(e)}
+                  />
+                </div>
               </div>
+              <br />
               {style == "Sign In" ? (
+                <h5
+                  style={{ textAlign: "center" }}
+                  className="hover"
+                  onClick={handleSignUp}
+                >
+                  New Here? Sign Up
+                </h5>
+              ) : style == "Edit Profile" ? (
                 <></>
               ) : (
-                <>
-                  <br />
-                  <div>
-                    <TextField
-                      variant="outlined"
-                      label="Phone"
-                      fullWidth={true}
-                      name="phone"
-                      value={userInfo.phone}
-                      onChange={(e) => handleData(e)}
-                    />
-                  </div>
-                </>
+                <h5
+                  style={{ textAlign: "center" }}
+                  className="hover"
+                  onClick={handleSignIn}
+                >
+                  already have an account? Sign In
+                </h5>
               )}
-
               <br />
-              <div>
-                <TextField
-                  fullWidth={true}
-                  variant="outlined"
-                  label="Password"
-                  name="password"
-                  value={userInfo.password}
-                  onChange={(e) => handleData(e)}
-                />
+              <div style={{ textAlign: "center" }}>
+                <Button
+                  type="submit"
+                  style={{ width: "50%" }}
+                  variant="contained"
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+                <br />
+                {loading && loading ? <LinearProgress /> : <></>}
               </div>
-            </div>
-            <br />
-            {style == "Sign In" ? (
-              <h5
-                style={{ textAlign: "center" }}
-                className="hover"
-                onClick={handleSignUp}
-              >
-                New Here? Sign Up
-              </h5>
-            ) : style == "Edit Profile" ? (
-              <></>
-            ) : (
-              <h5
-                style={{ textAlign: "center" }}
-                className="hover"
-                onClick={handleSignIn}
-              >
-                already have an account? Sign In
-              </h5>
-            )}
-            <br />
-            <div style={{ textAlign: "center" }}>
-              <Button
-                type="submit"
-                style={{ width: "50%" }}
-                variant="contained"
-                onClick={handleSave}
-              >
-                Save
-              </Button>
-              <br />
-              {loading && loading ? <LinearProgress /> : <></>}
-            </div>
-          </form>
-        </Modal.Body>
-      </Modal>
+            </form>
+          </Modal.Body>
+        </Modal>
 
-      <Modal show={show2} onHide={handleClose2}>
-        <Modal.Header closeButton={true}>Hello I am subham..</Modal.Header>
+        <Modal show={show2} onHide={handleClose2}>
+          <Modal.Header closeButton={true}>Hello I am subham..</Modal.Header>
 
-        <Modal.Body style={{ fontSize: "1.1rem" }}>
-          <div> Welcome to my MERN app,</div>
-          <div> Kindly Sign Up as random customer or login as</div>
-          <div> userName: admin</div>
-          <div>Password: 12</div>
-          <hr />
-          <div> (upgradation to NextJs in progress)</div>
-        </Modal.Body>
-      </Modal>
+          <Modal.Body style={{ fontSize: "1.1rem" }}>
+            <div> Welcome to my MERN app,</div>
+            <div> Kindly Sign Up as random customer or login as</div>
+            <div> userName: admin</div>
+            <div>Password: 12</div>
+            <hr />
+            <div> (upgradation to NextJs in progress)</div>
+          </Modal.Body>
+        </Modal>
 
-      <Modal show={show3} onHide={handleClose3}>
-        <Modal.Header closeButton={true}>
-          {localUserInfo?.name}'s Order List
-        </Modal.Header>
+        <Modal show={show3} onHide={handleClose3}>
+          <Modal.Header closeButton={true}>
+            {userInfo?.name}'s Order List
+          </Modal.Header>
 
-        <Modal.Body style={{ padding: "0px" }}>
-          <div width="100%">
-            {orderList &&
-              orderList.map((b, i) => {
-                return (
-                  <>
-                    <div
-                      style={{
-                        border: "2px solid",
-                        borderRadius: "10px",
-                      }}
-                    >
-                      <div className="row1">
-                        <div>{b.orderId}</div>
-                        <div>{b.orderDate.substring(0, 10)}</div>
-                        <div style={{ width: "100px", textAlign: "right" }}>
-                          ₹ {b.total}
+          <Modal.Body style={{ padding: "0px" }}>
+            <div width="100%">
+              {orderList &&
+                orderList.map((b, i) => {
+                  return (
+                    <>
+                      <div
+                        style={{
+                          border: "2px solid",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <div className="row1">
+                          <div>{b.orderId}</div>
+                          <div>{b.orderDate.substring(0, 10)}</div>
+                          <div style={{ width: "100px", textAlign: "right" }}>
+                            ₹ {b.total}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <br />
-                  </>
-                );
-              })}
-          </div>
-        </Modal.Body>
-      </Modal>
+                      <br />
+                    </>
+                  );
+                })}
+            </div>
+          </Modal.Body>
+        </Modal>
+      </>
 
       <div className="row1 header" style={{ height: "70px" }}>
         <h4 className="row0">
           <span className="pointer" onClick={() => router.push("/")}>
             {" "}
-            <Image src={logo} width={50} height={50} alt="s"/>{" "}
+            <Image src={logo} width={50} height={50} alt="s" />{" "}
             <span className="navKeys">FoodCart</span>
           </span>
           <InfoIcon className="pointer" onClick={() => setShow2(true)} />
         </h4>
 
         <div style={{ display: "flex", alignItems: "center" }}>
-          {localUserInfo?.name}&nbsp;
+          {userInfo?.name}&nbsp;
           <div className="dropBtn">
-            {localUserInfo ? (
+            {userInfo ? (
               <>
                 <div className="dropBtn">
-                  {localUserInfo ? (
+                  {userInfo ? (
                     <Dropdown className="skyBtn">
                       <Dropdown.Toggle className="skyBtn">
                         <PersonIcon style={{ color: "white" }} />
@@ -393,10 +399,7 @@ const Header = ({ poke, poke2 }) => {
             )}
           </div>
         </div>
-
-        
       </div>
-
 
       <Toaster />
     </>

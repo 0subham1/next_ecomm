@@ -1,12 +1,8 @@
-"use client";
 import "./app.css";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
 import Nav from "@/components/Nav";
-import Cookies from "universal-cookie";
 const inter = Inter({ subsets: ["latin"] });
-const cookies = new Cookies();
-var localUserInfo = cookies.get("localUserInfo");
 
 export const metadata = {
   title: "shop app",
@@ -28,9 +24,8 @@ export default function RootLayout({ children }) {
         <body className={inter.className}>
           <>
             <Header />
-
-            {localUserInfo?.isAdmin ? <Nav /> : <></>}
-<div id="subham">subham</div>
+            <Nav />
+            <div id="subham">subham</div>
             {children}
           </>
         </body>

@@ -1,27 +1,37 @@
-
+"use client";
 import { Card } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AccessibilityNewIcon from "@mui/icons-material/AccessibilityNew";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import GradingIcon from "@mui/icons-material/Grading";
-const Nav = ({ css }) => {
+import Cookies from "universal-cookie";
+const Nav = () => {
+  const cookies = new Cookies();
   const router = useRouter();
+  
+  let userInfo=cookies.get("userInfo")
+
+  
   return (
     <>
-      <Card className="row2">
-        <div onClick={() => router.push("/Items")} className="hover">
-          <FastfoodIcon /> <span>Items</span>
-        </div>
-        <br />{" "}
-        <div onClick={() => router.push("/Orders")} className="hover">
-          <GradingIcon /> <span>Orders</span>
-        </div>
-        <br />
-        <div onClick={() => router.push("/Users")} className="hover">
-          <AccessibilityNewIcon /> <span>Users</span>
-        </div>
-      </Card>
+      {userInfo?.isAdmin ? (
+        <Card className="row2">
+          <div onClick={() => router.push("/items")} className="hover">
+            <FastfoodIcon /> <span>Items</span>
+          </div>
+          <br />{" "}
+          <div onClick={() => router.push("/orders")} className="hover">
+            <GradingIcon /> <span>Orders</span>
+          </div>
+          <br />
+          <div onClick={() => router.push("/users")} className="hover">
+            <AccessibilityNewIcon /> <span>Users</span>
+          </div>
+        </Card>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
