@@ -5,7 +5,7 @@ import Nav from "@/components/Nav";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "shop app",
+  title: "next_ecomm",
   description: "this is made by subham",
 };
 
