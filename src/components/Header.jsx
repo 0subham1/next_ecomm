@@ -16,7 +16,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import RestoreIcon from "@mui/icons-material/Restore";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
-import logo from "../../public/img/logo.png";
+import logo from "../../public/img/log.png";
 import Image from "next/image";
 import Cookies from "universal-cookie";
 import Nav from "./Nav";
@@ -317,9 +317,9 @@ const Header = ({ poke, poke2 }) => {
         </Modal>
       </>
 
-      <div className="row1 header" style={{ height: "70px" }}>
-        <h4 className="row0">
-          <span className="pointer" onClick={() => router.push("/")}>
+      <div className="row1 card0" style={{ height: "70px" }}>
+        <h4 className="row1">
+          <span className="pointer" onClick={() => navigate("/")}>
             {" "}
             <Image src={logo} width={50} height={50} alt="s" />{" "}
             <span className="navKeys">FoodCart</span>
@@ -329,71 +329,58 @@ const Header = ({ poke, poke2 }) => {
 
         <div style={{ display: "flex", alignItems: "center" }}>
           {userInfo?.name}&nbsp;
-          <div className="dropBtn">
+          <div>
             {userInfo ? (
-              <>
-                <div className="dropBtn">
-                  {userInfo ? (
-                    <Dropdown className="skyBtn">
-                      <Dropdown.Toggle className="skyBtn">
-                        <PersonIcon style={{ color: "white" }} />
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <>
-                          <Dropdown.Item
-                            onClick={handleProfile}
-                            style={{ cursor: "pointer" }}
-                          >
-                            <b>
-                              <PersonIcon /> &nbsp;&nbsp;&nbsp;Profile
-                            </b>
-                          </Dropdown.Item>
+              <Dropdown>
+                <Dropdown.Toggle>
+                  <PersonIcon />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <>
+                    <Dropdown.Item
+                      onClick={handleProfile}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <b>
+                        <PersonIcon /> &nbsp;&nbsp;&nbsp;Profile
+                      </b>
+                    </Dropdown.Item>
 
-                          <Dropdown.Item
-                            onClick={() => handleOrderHistory()}
-                            style={{ cursor: "pointer" }}
-                          >
-                            <b>
-                              <RestoreIcon /> &nbsp;&nbsp;&nbsp;History
-                            </b>
-                          </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => handleOrderHistory()}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <b>
+                        <RestoreIcon /> &nbsp;&nbsp;&nbsp;History
+                      </b>
+                    </Dropdown.Item>
 
-                          <Dropdown.Item
-                            id="cartDrop"
-                            onClick={() => setShow2(true)}
-                            style={{ cursor: "pointer", display: "none" }}
-                          >
-                            <b>
-                              <ShoppingCartIcon /> &nbsp;&nbsp;&nbsp;Cart
-                            </b>
-                          </Dropdown.Item>
+                    <Dropdown.Item
+                      id="cartDrop"
+                      onClick={() => setShow2(true)}
+                      style={{ cursor: "pointer", display: "none" }}
+                    >
+                      <b>
+                        <ShoppingCartIcon /> &nbsp;&nbsp;&nbsp;Cart
+                      </b>
+                    </Dropdown.Item>
 
-                          <Dropdown.Item
-                            onClick={handleLogout}
-                            style={{ cursor: "pointer" }}
-                          >
-                            <b>
-                              <LogoutIcon /> &nbsp;&nbsp;&nbsp;Logout
-                            </b>
-                          </Dropdown.Item>
-                        </>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  ) : (
-                    <>
-                      <PersonIcon
-                        onClick={handleSignIn}
-                        style={{ cursor: "pointer", color: "white" }}
-                      />
-                    </>
-                  )}
-                </div>
-              </>
+                    <Dropdown.Item
+                      onClick={handleLogout}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <b>
+                        <LogoutIcon /> &nbsp;&nbsp;&nbsp;Logout
+                      </b>
+                    </Dropdown.Item>
+                  </>
+                </Dropdown.Menu>
+              </Dropdown>
             ) : (
               <>
                 <PersonIcon
                   onClick={handleSignIn}
-                  style={{ cursor: "pointer", color: "white" }}
+                  style={{ cursor: "pointer", }}
                 />
               </>
             )}
